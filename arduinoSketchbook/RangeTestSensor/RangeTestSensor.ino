@@ -39,7 +39,7 @@
     is flashed three times.  If no
  *  data is received from the hub, the Green LED (onboard D7 of the Photon) is flashed once.
  * 
- * version 2.0; 4/25/24
+ * version 2.0T; 8/17/26
 
     20241212 - version 2. works on Particle Photon 2 
     v 2.1 pulled all string searches out of if() clauses
@@ -54,6 +54,8 @@
     v 2.10 added a reset flashing message
            reports on CRFOP in transaction 2
            reads LoRa settings in setup
+    v 2.10T test version to test wake up on change interrupt vs falling interrupt
+
  */
 
 #include "tpp_LoRaGlobals.h"
@@ -328,7 +330,8 @@ void loop() {
         sleep_enable(); // not sleeping yet!
 
         noInterrupts(); // disable interrupts until we actually go to sleep.
-        attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), ISR_wakeAndSend, FALLING); // ready the wakeup interrupt
+//        attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), ISR_wakeAndSend, FALLING); // ready the wakeup interrupt
+        attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), ISR_wakeAndSend, CHANGE);
         EIFR = bit(INTF0);  // clear flag for interrupt 0
 
         // turn off brown-out enable in software
